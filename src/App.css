@@ -1,0 +1,489 @@
+html {
+    font-size: 0.8rem;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}
+
+.react-modal-sheet-container,
+.react-modal-sheet-content {
+    user-select: text !important;
+}
+
+.layout {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    color: white;
+}
+
+.layout::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url("https://getwallpapers.com/wallpaper/full/4/6/0/875698-free-nat-geo-wallpapers-hd-1920x1080.jpg") center/cover no-repeat;
+    filter: blur(4px) brightness(0.4);
+    transform: scale(1.1);
+    z-index: -2;
+}
+
+.layout::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+    z-index: -1;
+}
+
+.content {
+    position: relative;
+    padding-bottom: 70px;
+    z-index: 1;
+}
+
+.material-symbols-outlined {
+    font-size: 2.1rem !important;
+    font-variation-settings: "OPSZ" 48;
+}
+
+.word-break {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.float-btn {
+    position: fixed;
+    z-index: 999;
+    bottom: 100px;
+    right: 35px;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 0px 10px 4px rgba(138, 137, 137, 0.315);
+    border-radius: 100%;
+}
+
+.float-btn:hover {
+    transform: rotate(360deg);
+    transition: 0.5s ease-in-out;
+}
+
+.ts-1 {
+    font-size: 0.1rem;
+}
+
+.ts-2 {
+    font-size: 0.2rem;
+}
+
+.ts-3 {
+    font-size: 0.3rem;
+}
+
+.ts-4 {
+    font-size: 0.4rem;
+}
+
+.ts-5 {
+    font-size: 0.5rem;
+}
+
+.ts-6 {
+    font-size: 0.6rem;
+}
+
+.ts-7 {
+    font-size: 0.7rem;
+}
+
+.ts-8 {
+    font-size: 0.8rem;
+}
+
+.ts-9 {
+    font-size: 0.9rem;
+}
+
+.ts-10 {
+    font-size: 1rem;
+}
+
+.disable-select {
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+.hide-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.hide-scroll {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+/* navbar */
+
+.navbar-icon:hover {
+    color: rgba(255, 193, 7, 1) !important;
+    transition: 0.3s ease-in-out;
+    transform: scale(1.1) !important;
+    position: relative !important;
+}
+
+/* header navbar */
+
+.header-title-text:hover {
+    color: rgba(255, 193, 7, 1) !important;
+    transition: 0.2s ease-in-out;
+}
+
+.header-profile-icon-box {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.header-profile-img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1/1;
+    border-radius: 100%;
+    object-fit: cover;
+}
+
+.header-profile-img:hover {
+    scale: 1.1;
+    position: relative;
+    transform: rotate(-360deg);
+    transition: 0.5s ease-in-out;
+}
+
+.header-add-icon:hover {
+    color: rgba(255, 193, 7, 1) !important;
+    scale: 1.1;
+    position: relative;
+    transition: 0.2s ease-in-out;
+}
+
+/* group card recommendation */
+
+.carousel-container {
+    scroll-snap-type: mandatory
+}
+
+.carousel-card {
+    width: 123px;
+    scroll-snap-align: start;
+    background: none;
+    display: block;
+}
+
+.carousel-card:hover {
+    transform: scale(1.02);
+    transition: 0.2s ease-in-out;
+}
+
+.carousel-img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1/1;
+}
+
+.carousel-body-container:hover {
+    color: rgba(255, 193, 7, 1);
+    border-radius: 0.5rem;
+}
+
+.carousel-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.carousel-img-contain {
+    font-size: 0.7rem;
+    border-radius: 0.6rem;
+    opacity: 0.8;
+}
+
+/* users lists */
+
+.user-card:hover {
+    background: rgba(255, 254, 254, 0.116);
+    color: rgba(255, 193, 7, 1);
+    border-radius: 0.5rem;
+    transition: 0.3s ease-in-out;
+}
+
+.user-img-box {
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    user-select: none;
+    padding: 3px;
+}
+
+.user-img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1/1;
+    border-radius: 0.3rem;
+    object-fit: cover;
+}
+
+.user-img:hover {
+    scale: 1.5rem;
+    transform: scale(1.1);
+    transition: 0.3s ease-in-out;
+}
+
+.user-card-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* device container */
+
+.device-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.hover-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.device-card:hover .hover-overlay {
+    opacity: 1;
+}
+
+.device-text-floating {
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 0.5rem;
+    padding: 2px 10px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+/* sheet container */
+
+.custom-sheet {
+    width: 100% !important;
+    margin: 0 auto;
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+@media (min-width: 768px) {
+    .custom-sheet {
+        width: 60% !important;
+    }
+}
+
+.sheet-thumb-box {
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.sheet-thumb {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1/1;
+    border-radius: 0.4rem;
+    object-fit: cover;
+}
+
+.sheet-list-card:hover {
+    background: rgba(255, 254, 254, 0.116);
+    color: rgba(255, 193, 7, 1);
+    border-radius: 0.5rem;
+    transition: 0.3s ease-in-out;
+}
+
+.sheet-list-icon-box {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* claims container */
+
+.table,
+.table th,
+.table td,
+.table thead,
+.table tbody,
+.table tr {
+    background-color: transparent !important;
+    font-size: 0.85rem;
+}
+
+.table td {
+    padding: 10px 8px;
+}
+
+.recharts-surface:focus {
+    outline: none;
+}
+
+/* groups container */
+
+.masonry {
+    column-count: 1;
+    column-gap: 1rem;
+    border: 0;
+}
+
+.masonry .card {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 1rem;
+    border: 0;
+    background: transparent;
+}
+
+@media (min-width: 206px) {
+    .masonry {
+        column-count: 2;
+    }
+}
+
+@media (min-width: 768px) {
+    .masonry {
+        column-count: 3;
+    }
+}
+
+@media (min-width: 992px) {
+    .masonry {
+        column-count: 6;
+    }
+}
+
+.group-card {
+    border-radius: 0.5rem;
+}
+
+.group-card-body {
+    border-radius: 0 0 0.4rem 0.4rem;
+}
+
+.group-thumb-container-cover {
+    background-color: rgba(0, 0, 0, 0.747);
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    aspect-ratio: 1/1;
+    z-index: 999;
+}
+
+.group-thumb-container {
+    width: 100%;
+    aspect-ratio: 1/1;
+}
+
+.group-thumb {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1/1;
+    border-radius: 0.4rem 0.4rem 0 0;
+}
+
+.group-thumb:hover {
+    filter: grayscale(100%) contrast(1.2) brightness(0.9);
+}
+
+.group-card-thumb-pill {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    font-size: 0.7rem;
+    border-radius: 0.5rem;
+}
+
+.group-card-btn {
+    border-radius: 0.4rem;
+}
+
+.group-card-btn:hover {
+    font-weight: bold;
+}
+
+.group-card-li {
+    background: transparent;
+    color: black;
+}
+
+/* pages container */
+
+.pages-sheet-thumb {
+    width: 100%;
+    border-radius: 0.4rem;
+    object-fit: cover;
+}
+
+/* chat container */
+
+
+.chat-profile-thumb-container {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    user-select: none;
+    padding: 3px;
+}
+
+.chat-profile-thumb {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1/1;
+    border-radius: 100%;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.chat-bubble {
+    height: 100%;
+    min-width: 20%;
+    max-width: 95%;
+    border-radius: 0.5rem;
+}
