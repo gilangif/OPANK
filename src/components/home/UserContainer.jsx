@@ -188,8 +188,8 @@ export default function UserContainer() {
 
       dispatch(dispatchUser(arr))
     } catch (error) {
-      const status = err.status && typeof err.status === "number" ? err.status : err.response && err.response.status ? err.response.status : 500
-      const message = err.response && err.response.data.message ? err.response.data.message : "Internal Server Error"
+      const status = error.status && typeof error.status === "number" ? error.status : error.response && error.response.status ? error.response.status : 500
+      const message = error.response && error.response.data.message ? error.response.data.message : "Internal Server Error"
 
       console.log(error)
       toast.error(message, {
