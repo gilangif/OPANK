@@ -30,7 +30,7 @@ export default function NavHeader() {
       draggable: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#212529",
-      confirmButtonText: "DELETE",
+      confirmButtonText: "LOGOUT",
       cancelButtonText: "CANCEL",
       width: "300px",
       didOpen: () => {

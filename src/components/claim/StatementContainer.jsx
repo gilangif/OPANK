@@ -53,10 +53,10 @@ const ChartContainer = ({ props }) => {
             </span>
           </div>
           <div>
-            <span className="ts-9 text-light fw-bold" style={{ marginRight: "8px" }}>
+            <span className="text-light fw-bold" style={{ marginRight: "8px" }}>
               MTD:
             </span>
-            <span className="ts-9 text-light">
+            <span className="text-light">
               Rp.{ma} ({month.total} transcation)
             </span>
           </div>
@@ -147,7 +147,12 @@ const ChartContainer = ({ props }) => {
 }
 
 export default function StatementContainer() {
+  const inputRef = useRef(null)
+
   const [isOpen, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [showFilter, setShowFilter] = useState(false)
+
   const [detail, setDetail] = useState({ type: "", today: 0, month: 0, statement: [] })
   const [statementDate, setStatementDate] = useState(localIso)
 
@@ -156,9 +161,10 @@ export default function StatementContainer() {
 
   const dispatch = useDispatch()
 
-  const inputRef = useRef(null)
-
   const getStatement = async () => {
+    setLoading(true)
+    setShowFilter(false)
+
     try {
       const { data } = await axios.get(API + "/claims/statement", { headers: { Authorization: `Bearer ${accessToken}` }, params: { date: statementDate } })
 
@@ -168,6 +174,9 @@ export default function StatementContainer() {
 
       console.log(error)
       toast.error(message, { position: "top-right", autoClose: 1000, hideProgressBar: true, closeOnClick: true, pauseOnHover: false, draggable: true, theme: "colored" })
+    } finally {
+      setLoading(false)
+      setShowFilter(false)
     }
   }
 
@@ -178,161 +187,192 @@ export default function StatementContainer() {
 
   useEffect(() => {
     getStatement()
-  }, [statementDate])
+  }, [])
 
   const handleClick = () => inputRef.current.showPicker?.()
 
   return (
     <>
-      <div>
+      <div className="d-flex gap-3">
         <h1 className="disable-select m-0" onClick={handleClick}>
           {statementDate || localIso}
         </h1>
 
-        <input ref={inputRef} type="date" value={statementDate} onChange={(e) => setStatementDate(e.target.value)} style={{ position: "absolute", opacity: 0, pointerEvents: "none" }} />
+        {showFilter ? (
+          <div className="d-flex flex-column justify-content-center align-items-center">
+            <h1 className="material-symbols-outlined m-0 p-0 disable-select" onClick={() => getStatement()}>
+              filter_alt
+            </h1>
+          </div>
+        ) : (
+          ""
+        )}
+
+        {loading ? (
+          <div className="d-flex align-items-center p-0 m-0">
+            <div className="spinner-border" style={{ scale: 0.8 }} role="status">
+              <span className="sr-only"></span>
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
+
+        <input
+          ref={inputRef}
+          type="date"
+          value={statementDate}
+          onChange={(e) => {
+            setStatementDate(e.target.value)
+            setShowFilter(true)
+          }}
+          style={{ position: "absolute", opacity: 0, pointerEvents: "none" }}
+        />
       </div>
 
       <div className="col flex-grow-1 d-flex flex-column py-1">
-        {Object.keys(statementList).map((key, i) => {
-          if (key == "owner") return
+        {Object.keys(statementList)
+          .sort()
+          .map((key, i) => {
+            if (key == "owner") return
 
-          if (key === "all") return <ChartContainer key={i} props={statementList[key]} />
+            if (key === "all") return <ChartContainer key={i} props={statementList[key]} />
 
-          const owner = statementList["owner"]
-          const data = Object.keys(statementList[key])
-            .map((name) => ({ name, ...statementList[key][name] }))
-            .sort((a, b) => b.today.amount - a.today.amount)
+            const owner = statementList["owner"]
+            const data = Object.keys(statementList[key])
+              .map((name) => ({ name, ...statementList[key][name] }))
+              .sort((a, b) => b.today.amount - a.today.amount)
 
-          if (data.length === 0) return
+            if (data.length === 0) return
 
-          return (
-            <div key={i}>
-              <div className="py-3 disable-select">
-                <p className="text-uppercase fw-bold">SUMMARY BY {key}</p>
+            return (
+              <div key={i}>
+                <div className="py-3 disable-select">
+                  <p className="text-uppercase fw-bold">SUMMARY BY {key}</p>
 
-                <table className="table table-striped">
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">NAME</th>
-                      <th scope="col">%</th>
-                      <th scope="col">TODAY</th>
-                      <th scope="col">MTD</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.map((x, j) => {
-                      const { name, today, month, statement } = x
+                  <table className="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">NAME</th>
+                        <th scope="col">%</th>
+                        <th scope="col">TODAY</th>
+                        <th scope="col">MTD</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.map((x, j) => {
+                        const { name, today, month, statement } = x
 
-                      let censor = false
-                      let creator = false
+                        let censor = false
+                        let creator = false
 
-                      if (key === "models" && !owner.find((y) => y === name)) {
-                        censor = true
-                        creator = true
-                      }
-
-                      if (key === "communities" && name !== community) {
-                        censor = true
-                        creator = true
-                      }
-
-                      if (key === "types") censor = false
-                      if (role === "admin") censor = false
-
-                      const ta = censor ? String(today.amount).replace(/./g, "*") : new Intl.NumberFormat("id-ID", { minimumFractionDigits: 0 }).format(today.amount)
-                      const ma = censor ? String(month.amount).replace(/./g, "*") : new Intl.NumberFormat("id-ID", { minimumFractionDigits: 0 }).format(month.amount)
-
-                      let nm = ""
-
-                      if (censor && /^[0-9]+$/.test(name)) {
-                        for (let z = 0; z < name.length; z++) {
-                          if (z > 3 && z <= 7) nm += "*"
-                          else nm += name[z]
+                        if (key === "models" && !owner.find((y) => y === name)) {
+                          censor = true
+                          creator = true
                         }
-                      } else {
-                        nm = name
-                      }
 
-                      const obj = {
-                        type: `${key} ${name}`,
-                        today: ta,
-                        month: ma,
-                        statement: statement.map(({ amount, percentage, total, claim }) => ({
-                          amount: censor ? String(amount).replace(/./g, "*") : new Intl.NumberFormat("id-ID", { minimumFractionDigits: 0 }).format(amount),
-                          percentage,
-                          total,
-                          claim,
-                        })),
-                      }
+                        if (key === "communities" && name !== community) {
+                          censor = true
+                          creator = true
+                        }
 
-                      return (
-                        <tr key={j} onClick={() => showSummary(obj)}>
-                          <td className="text-uppercase">{j + 1}</td>
-                          <td className={`text-uppercase ${creator ? "" : "fw-bold text-warning"}`}>{nm.split(" ").slice(0, 3).join(" ")}</td>
-                          <td className="text-uppercase">{today.percentage > 0 ? today.percentage.toFixed(1) : 0}%</td>
-                          <td className="text-uppercase">RP {ta}</td>
-                          <td className="text-uppercase">RP {ma}</td>
-                        </tr>
-                      )
-                    })}
-                  </tbody>
-                </table>
-              </div>
+                        if (key === "types") censor = false
+                        if (role === "admin") censor = false
 
-              <Sheet isOpen={isOpen} onClose={() => setOpen(false)} detent="content-height" className="custom-sheet">
-                <Sheet.Container className="bg-dark">
-                  <Sheet.Header className="p-3">
-                    <div className="d-flex">
-                      <div className="col d-flex flex-column justify-content-center align-items-start px-2">
-                        <h6 className="m-0 text-uppercase">SUMMARY {detail.type}</h6>
-                        <p className="m-0">TOTAL RP {detail.month}</p>
-                      </div>
-                      <div className="d-flex justify-content-center align-items-center gap-3">
-                        <span className="material-symbols-outlined p-2 fw-bold" onClick={() => saveFile(detail)}>
-                          download
-                        </span>
-                        <span className="material-symbols-outlined p-2 fw-bold" onClick={() => setOpen(false)}>
-                          close
-                        </span>
-                      </div>
-                    </div>
-                  </Sheet.Header>
+                        const ta = censor ? String(today.amount).replace(/./g, "*") : new Intl.NumberFormat("id-ID", { minimumFractionDigits: 0 }).format(today.amount)
+                        const ma = censor ? String(month.amount).replace(/./g, "*") : new Intl.NumberFormat("id-ID", { minimumFractionDigits: 0 }).format(month.amount)
 
-                  <Sheet.Content className="px-3 py-2 p-lg-3">
-                    <div className="table-responsive hide-scroll disable-select w-100">
-                      <table className="table">
-                        <thead>
-                          <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">AMOUNT</th>
-                            <th scope="col">CLAIM</th>
-                            <th scope="col">TOTAL</th>
-                            <th scope="col">PERCENTAGE</th>
+                        let nm = ""
+
+                        if (censor && /^[0-9]+$/.test(name)) {
+                          for (let z = 0; z < name.length; z++) {
+                            if (z > 3 && z <= 7) nm += "*"
+                            else nm += name[z]
+                          }
+                        } else {
+                          nm = name
+                        }
+
+                        const obj = {
+                          type: `${key} ${name}`,
+                          today: ta,
+                          month: ma,
+                          statement: statement.map(({ amount, percentage, total, claim }) => ({
+                            amount: censor ? String(amount).replace(/./g, "*") : new Intl.NumberFormat("id-ID", { minimumFractionDigits: 0 }).format(amount),
+                            percentage,
+                            total,
+                            claim,
+                          })),
+                        }
+
+                        return (
+                          <tr key={j} onClick={() => showSummary(obj)}>
+                            <td className="text-uppercase">{j + 1}</td>
+                            <td className={`text-uppercase ${creator ? "" : "fw-bold text-warning"}`}>{nm.split(" ").slice(0, 3).join(" ")}</td>
+                            <td className="text-uppercase">{today.percentage > 0 ? today.percentage.toFixed(1) : 0}%</td>
+                            <td className="text-uppercase">RP {ta}</td>
+                            <td className="text-uppercase">RP {ma}</td>
                           </tr>
-                        </thead>
-                        <tbody>
-                          {detail.statement.map((x, i) => {
-                            return (
-                              <tr key={i}>
-                                <td scope="row">{i + 1}</td>
-                                <td>RP {x.amount}</td>
-                                <td>{x.claim}</td>
-                                <td>{x.total}</td>
-                                <td>{x.percentage > 0 ? x.percentage.toFixed(1) : 0}%</td>
-                              </tr>
-                            )
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
-                  </Sheet.Content>
-                </Sheet.Container>
-                <Sheet.Backdrop style={{ backgroundColor: "rgba(0,0,0,0.7)" }} onTap={() => setOpen(false)} />
-              </Sheet>
-            </div>
-          )
-        })}
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+
+                <Sheet isOpen={isOpen} onClose={() => setOpen(false)} detent="content-height" className="custom-sheet">
+                  <Sheet.Container className="bg-dark">
+                    <Sheet.Header className="p-3">
+                      <div className="d-flex">
+                        <div className="col d-flex flex-column justify-content-center align-items-start px-2">
+                          <h6 className="m-0 text-uppercase">SUMMARY {detail.type}</h6>
+                          <p className="m-0">TOTAL RP {detail.month}</p>
+                        </div>
+                        <div className="d-flex justify-content-center align-items-center gap-3">
+                          <span className="material-symbols-outlined p-2 fw-bold" onClick={() => saveFile(detail)}>
+                            download
+                          </span>
+                          <span className="material-symbols-outlined p-2 fw-bold" onClick={() => setOpen(false)}>
+                            close
+                          </span>
+                        </div>
+                      </div>
+                    </Sheet.Header>
+
+                    <Sheet.Content className="px-3 py-2 p-lg-3">
+                      <div className="table-responsive hide-scroll disable-select w-100">
+                        <table className="table">
+                          <thead>
+                            <tr>
+                              <th scope="col">#</th>
+                              <th scope="col">AMOUNT</th>
+                              <th scope="col">CLAIM</th>
+                              <th scope="col">TOTAL</th>
+                              <th scope="col">PERCENTAGE</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {detail.statement.map((x, i) => {
+                              return (
+                                <tr key={i}>
+                                  <td scope="row">{i + 1}</td>
+                                  <td>RP {x.amount}</td>
+                                  <td>{x.claim}</td>
+                                  <td>{x.total}</td>
+                                  <td>{x.percentage > 0 ? x.percentage.toFixed(1) : 0}%</td>
+                                </tr>
+                              )
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    </Sheet.Content>
+                  </Sheet.Container>
+                  <Sheet.Backdrop style={{ backgroundColor: "rgba(0,0,0,0.7)" }} onTap={() => setOpen(false)} />
+                </Sheet>
+              </div>
+            )
+          })}
       </div>
     </>
   )

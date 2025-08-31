@@ -37,7 +37,6 @@ export default function Login() {
       e.preventDefault()
 
       const { data } = await axios.post(API + "/users/auth", { username, password })
-      console.log("📢[:40]: ", data)
       const { id, role, avatar, accessToken, refreshToken } = data
 
       const message = `Welcome back ${username}`
