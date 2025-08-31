@@ -16,16 +16,10 @@ import Swal from "sweetalert2"
 
 export default function GroupCard({ props }) {
   const [show, setShow] = useState(false)
-
   const [isOpen, setOpen] = useState(false)
+
   const [marker, setMarker] = useState(props.mark)
-  const [actions, setActions] = useState([
-    { key: "one", join: true, action: "join" },
-    { key: "two", join: false, action: "error" },
-    { key: "three", join: true, action: "join" },
-    { key: "five", join: false, action: "banned" },
-    { key: "four", join: true, action: "leave" },
-  ])
+  const [actions, setActions] = useState([])
 
   const { accessToken, username, role, avatar } = useSelector((state) => state.auth)
   const { users, devices } = useSelector((state) => state.config)
@@ -111,6 +105,8 @@ export default function GroupCard({ props }) {
   }
 
   const actionGroup = async (key, join, action, inviteCode) => {
+    if (action === "banned" || action === "error") return toast.warning(`account ${key} ${action} (${inviteCode})`)
+
     const toastId = toast.loading("Loading data...")
 
     try {
@@ -136,20 +132,20 @@ export default function GroupCard({ props }) {
     const inviteCode = username
 
     try {
-      const accounts = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
+      const details = Array.from({ length: 10 })
+        .map((x, i) => i + 1)
+        .map(async (key) => {
+          try {
+            const { data } = await axios.post(API + "/telegram/groups/detail", { key, inviteCode })
+            const { join, banned } = data
 
-      const details = accounts.map(async (key) => {
-        try {
-          const { data } = await axios.post(API + "/telegram/groups/detail", { key, inviteCode })
-          const { join, banned } = data
+            const action = banned ? "banned" : join ? "leave" : "join"
 
-          const action = banned ? "banned" : join ? "leave" : "join"
-
-          return { key, join, action, inviteCode }
-        } catch (error) {
-          return { key, join: false, action: "error", inviteCode }
-        }
-      })
+            return { key, join, action, inviteCode }
+          } catch (error) {
+            return { key, join: false, action: "error", inviteCode }
+          }
+        })
 
       setActions(await Promise.all(details))
       setShow(true)
@@ -192,7 +188,7 @@ export default function GroupCard({ props }) {
             {accounts.map((x, i) => {
               return (
                 <div className="group-card-thumb-pill fw-bold bg-dark text-light" key={i}>
-                  {x}
+                  ACCOUNT {x}
                 </div>
               )
             })}
@@ -296,25 +292,13 @@ export default function GroupCard({ props }) {
               {actions.map((x, i) => {
                 const { key, join, action, inviteCode } = x
 
-                const icons = {
-                  one: "counter_1",
-                  two: "counter_2",
-                  three: "counter_3",
-                  four: "counter_4",
-                  five: "counter_5",
-                  six: "counter_6",
-                  seven: "counter_7",
-                  eight: "counter_8",
-                  nine: "counter_9",
-                }
-
                 return (
                   <div className="col-12 col-md-6 col-lg-3 px-1 py-0 px-lg-2 py-lg-1" key={i}>
                     <SheetList
                       fill={action === "error" || action === "banned" || action === "leave"}
                       color={action === "error" ? "text-warning" : action === "banned" ? "text-danger" : action === "leave" ? "text-info" : "text-light"}
-                      icon={icons[key]}
-                      title={`${key} (${action})`}
+                      icon="account_circle"
+                      title={`ACCOUNT ${key} (${action})`}
                       onClick={() => actionGroup(key, join, action, inviteCode)}
                     />
                   </div>
