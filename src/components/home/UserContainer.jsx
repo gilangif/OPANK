@@ -135,7 +135,7 @@ function UserCard({ id, thumb, title, community, start, balance, session, data }
         <Sheet.Backdrop style={{ backgroundColor: "rgba(0,0,0,0.7)" }} onTap={() => setOpen(false)} />
       </Sheet>
 
-      <div className="d-flex justify-content-center align-items-center gap-1 user-card p-0 rounded" style={{ background: bc === "Unauthorized" ? "rgba(255, 0, 0, 0.37)" : "" }}>
+      <div className="d-flex justify-content-center align-items-center gap-1 user-card p-0 rounded" style={{ background: bc === "invalid" || bc === "Unauthorized" ? "rgba(255, 0, 0, 0.37)" : "" }}>
         <div className="user-img-box flex-shrink-0">
           <img
             src={thumb || DEFAULT_IMAGE}
