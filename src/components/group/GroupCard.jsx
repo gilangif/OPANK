@@ -18,7 +18,7 @@ export default function GroupCard({ props }) {
   const [show, setShow] = useState(false)
   const [isOpen, setOpen] = useState(false)
 
-  const [marker, setMarker] = useState(props.mark)
+  const [marker, setMarker] = useState()
   const [actions, setActions] = useState([])
 
   const { accessToken, username, role, avatar } = useSelector((state) => state.auth)
@@ -28,8 +28,8 @@ export default function GroupCard({ props }) {
   const accounts = []
 
   useEffect(() => {
-    setMarker(props.mark)
-  }, [props.mark])
+    if (props.mark !== undefined || props.mark !== null) setMarker(props.mark)
+  }, [props])
 
   if (props.one) accounts.push("one")
   if (props.two) accounts.push("two")
