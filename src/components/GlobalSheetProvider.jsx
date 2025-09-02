@@ -30,7 +30,7 @@ export const GlobalSheetProvider = ({ children }) => {
           <Sheet.Header className="px-3 py-2">
             <div className="d-flex">
               <div className="col d-flex flex-column justify-content-center align-items-start px-2">
-                <h6 className="m-0">VIEW DATA</h6>
+                <h5 className="m-0">VIEW DATA</h5>
               </div>
               <div className="d-flex justify-content-center align-items-center gap-3">
                 <span className="material-symbols-outlined p-2 fw-bold" onClick={() => saveFile(data)}>

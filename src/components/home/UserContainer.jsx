@@ -116,7 +116,7 @@ function UserCard({ id, thumb, title, community, start, balance, session, data }
           <Sheet.Content className="px-3 py-2 p-lg-3">
             <SheetDetailHeader thumb={thumb || DEFAULT_IMAGE} title={title} community={community} balance={balance} session={session} start={start} />
 
-            <div className="row g-3">
+            <div className="row g-2">
               <div className="col-12 col-md-6 col-lg-3 px-1 py-0 px-lg-2 py-lg-1">
                 <SheetList icon="content_copy" title="copy session" onClick={() => copy(session)} />
               </div>
@@ -135,7 +135,10 @@ function UserCard({ id, thumb, title, community, start, balance, session, data }
         <Sheet.Backdrop style={{ backgroundColor: "rgba(0,0,0,0.7)" }} onTap={() => setOpen(false)} />
       </Sheet>
 
-      <div className="d-flex justify-content-center align-items-center gap-1 user-card p-0 rounded" style={{ background: bc === "invalid" || bc === "Unauthorized" ? "rgba(255, 0, 0, 0.37)" : "" }}>
+      <div
+        className="d-flex justify-content-center align-items-center gap-1 user-card p-0 rounded"
+        style={{ background: bc === "invalid" || bc === "Unauthorized" ? "rgba(255, 0, 0, 0.37)" : "" }}
+      >
         <div className="user-img-box flex-shrink-0">
           <img
             src={thumb || DEFAULT_IMAGE}
@@ -148,14 +151,14 @@ function UserCard({ id, thumb, title, community, start, balance, session, data }
           />
         </div>
 
-        <div className="d-flex flex-grow-1">
+        <div className="d-flex flex-grow-1 p-0 m-0">
           <div className="w-100 d-flex flex-column justify-content-start align-items-start p-2 gap-2 disable-select">
             <p className="p-0 m-0 fw-bold ts-9 user-card-title text-uppercase">{title}</p>
             <p className="p-0 m-0 ts-8 text-light">{community} community</p>
             <p className="p-0 m-0 ts-8">Rp.{bc}</p>
           </div>
           <div className="d-flex justify-content-center align-items-center p-2 disable-select flex-shrink-0">
-            <span className="material-symbols-outlined fw-bold text-light" style={{ scale: "0.8" }} onClick={() => setOpen(true)}>
+            <span className="material-symbols-outlined fw-bold text-light" style={{ scale: "0.85" }} onClick={() => setOpen(true)}>
               more_vert
             </span>
           </div>

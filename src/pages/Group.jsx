@@ -22,7 +22,7 @@ export default function Group() {
 
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const [search, setSearch] = useState(searchParams.get("search") || "")
+  const [search, setSearch] = useState(() => searchParams.get("search") || "")
 
   const [page, setPage] = useState(() => parseInt(searchParams.get("page")) || 1)
   const [limit, setLimit] = useState(() => parseInt(searchParams.get("limit")) || 25)
@@ -71,38 +71,43 @@ export default function Group() {
     setOpen(false)
 
     if (clear) {
-      setPage(1)
       setLimit(25)
       setSort("desc")
       setOrder("")
       setSearch("")
 
+      if (page !== 1) setPage(1)
+
       setSearchParams({})
+
+      if (page === 1) getGroups(page, limit, sort, order, key, search)
       return
     }
 
-    setPage(1)
-    getGroups()
+    if (page !== 1) setPage(1)
+    if (page === 1) getGroups(page, limit, sort, order, key, search)
   }
 
   const searchData = async (e) => {
     e.preventDefault()
-    setPage(1)
-    getGroups()
+
+    if (page !== 1) setPage(1)
+    if (page === 1) getGroups(page, limit, sort, order, key, search)
   }
 
-  const getGroups = async () => {
+  const getGroups = async (page, limit, sort, order, key, search) => {
     try {
-      const params = { page, limit, sort, order, key, search }
+      const params = {}
+
+      if (page) params.page = page
+      if (limit) params.limit = limit
+      if (sort) params.sort = sort
+      if (order) params.order = order
+      if (key) params.key = key
+      if (search) params.search = search
 
       const { data: groups } = await axios.get(API_V2 + "/telegram/groups", { params })
       const { data, total, page: currentPage, pages, unmark, mark } = groups
-
-      setLists(data)
-      setMark(mark)
-      setUnmark(unmark)
-      setTotalData(total)
-      setTotalPages(pages)
 
       const obj = { page: currentPage }
 
@@ -113,6 +118,13 @@ export default function Group() {
       if (key) obj.key = key
 
       setSearchParams(obj)
+
+      setLists(data)
+      setMark(mark)
+      setUnmark(unmark)
+      setTotalData(total)
+      setTotalPages(pages)
+      setPage(currentPage)
     } catch (error) {
       const message = error?.response?.data?.message || error.message || "UNKNOWN ERROR"
 
@@ -129,11 +141,11 @@ export default function Group() {
 
     if (searchParams.get("page")) setPage(parseInt(searchParams.get("page")) || 1)
     if (searchParams.get("limit")) setLimit(parseInt(searchParams.get("limit")) || 25)
-  }, [searchParams])
+  }, [])
 
   useEffect(() => {
-    getGroups()
-  }, [page, searchParams])
+    getGroups(page, limit, sort, order, key, search)
+  }, [page])
 
   return (
     <>
@@ -175,10 +187,10 @@ export default function Group() {
 
       <Sheet isOpen={isOpen} onClose={() => setOpen(false)} disableDrag={true} detent="content-height" className="custom-sheet">
         <Sheet.Container className="bg-dark disable-select">
-          <Sheet.Header className="px-3 py-2">
+          <Sheet.Header className="px-3 py-3">
             <div className="d-flex">
               <div className="col d-flex flex-column justify-content-center align-items-start px-2">
-                <h6 className="m-0">CLAIMS FILTER</h6>
+                <h5 className="m-0">GROUP FILTER</h5>
               </div>
               <div className="d-flex justify-content-center align-items-center gap-3">
                 <span className="material-symbols-outlined p-2 fw-bold" onClick={() => filter(true)}>
@@ -193,7 +205,7 @@ export default function Group() {
               </div>
             </div>
           </Sheet.Header>
-          <Sheet.Content className="px-3">
+          <Sheet.Content className="px-3 py-2">
             <div className="input-group mb-3">
               <label className=" disable-select input-group-text" style={{ width: "25%" }}>
                 SORT

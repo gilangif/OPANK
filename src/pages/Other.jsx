@@ -59,7 +59,7 @@ export default function Other() {
   const [show, setShow] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const [text, setText] = useState("https://t.me/+GiRGS6zs2-M5OGQ1")
+  const [text, setText] = useState("https://t.me/")
   const [type, setType] = useState("1")
 
   const [msg, setMsg] = useState("")
@@ -224,10 +224,10 @@ export default function Other() {
         <div className="mx-auto col-12 col-md-11 col-lg-8">
           <div className="py-3 mb-4">
             <h5 className="fw-bold">STANDBY MODE</h5>
-            <p className="ts-8 m-0">{msg}</p>
+            <p className="ts-9 m-0">{msg}</p>
           </div>
           <div className="table-responsive hide-scroll disable-select">
-            <table className="table">
+            <table className="table table-striped">
               <thead>
                 <tr>
                   <th scope="col">#</th>
@@ -267,7 +267,7 @@ export default function Other() {
         <Sheet.Container className="bg-dark disable-select">
           <Sheet.Header />
 
-          <Sheet.Content className="px-3">
+          <Sheet.Content className="px-3 py-2">
             <div className="d-flex flex-row gap-3">
               <div className="sheet-thumb-box flex-shrink-0">
                 <div className="sheet-thumb d-flex justify-content-center align-items-center" style={{ background: randomColor(temp.target).background, color: randomColor(temp.target).color }}>
@@ -301,7 +301,7 @@ export default function Other() {
                 </div>
               </div>
             </div>
-            <div className="my-3 table-responsive">
+            <div className="my-4 table-responsive">
               <img
                 src={temp.base64img || DEFAULT_IMAGE}
                 alt=""
@@ -319,10 +319,10 @@ export default function Other() {
 
       <Sheet isOpen={isOpen} onClose={() => setOpen(false)} disableDrag={true} detent="content-height" className="custom-sheet">
         <Sheet.Container className="bg-dark disable-select">
-          <Sheet.Header className="px-3 py-2">
+          <Sheet.Header className="px-3 py-3">
             <div className="d-flex disable-select">
               <div className="col d-flex flex-column justify-content-center align-items-start px-2">
-                <h6 className="m-0">ADD STANDBY MODE</h6>
+                <h5 className="m-0">ADD STANDBY MODE</h5>
               </div>
               <div className="d-flex justify-content-center align-items-center gap-3">
                 <span className="material-symbols-outlined p-2 fw-bold" onClick={() => pagesAdd()}>

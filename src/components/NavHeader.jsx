@@ -128,11 +128,11 @@ export default function NavHeader() {
     <>
       <Sheet isOpen={isOpen} onClose={() => setOpen(false)} disableDrag={true} detent="content-height" className="custom-sheet">
         <Sheet.Container className="bg-dark disable-select">
-          <Sheet.Header className="px-3 py-2">
+          <Sheet.Header className="px-3 py-3">
             <div className="d-flex">
               <div className="col d-flex flex-column justify-content-center align-items-start px-2">
-                <h6 className="m-0">ALIPAYJSESSIONID</h6>
-                <p className="m-0 ts-7" id="input-session-info">
+                <h5 className="m-0">ALIPAYJSESSIONID</h5>
+                <p className="m-0 ts-8" id="input-session-info">
                   PLEASE INPUT SESSION
                 </p>
               </div>
