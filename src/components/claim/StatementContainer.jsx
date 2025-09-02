@@ -184,6 +184,7 @@ export default function StatementContainer() {
       })
 
       dispatch(dispatchStatement(obj))
+      setShowFilter(false)
     } else {
       getStatement()
     }
@@ -222,14 +223,14 @@ export default function StatementContainer() {
 
   return (
     <>
-      <div className="d-flex gap-3">
-        <h1 className="disable-select m-0" onClick={handleClick}>
+      <div className="d-flex gap-3 py-3">
+        <h1 className="disable-select m-0" onClick={handleClick} style={{ fontSize: "2.6rem" }}>
           {statementDate || localIso}
         </h1>
 
         {showFilter ? (
           <div className="d-flex flex-column justify-content-center align-items-center">
-            <h1 className="material-symbols-outlined m-0 p-0 disable-select" onClick={() => filterStatement()}>
+            <h1 className="material-symbols-outlined m-0 p-0 disable-select" onClick={() => filterStatement()} style={{ fontSize: "2.6rem" }}>
               filter_alt
             </h1>
           </div>
@@ -353,7 +354,7 @@ export default function StatementContainer() {
                     <div className="d-flex">
                       <div className="col d-flex flex-column justify-content-center align-items-start px-2">
                         <h6 className="m-0 text-uppercase">SUMMARY {detail.type}</h6>
-                        <p className="m-0">TOTAL RP {detail.mtd}</p>
+                        <p className="m-0">TOTAL RP {detail.month}</p>
                       </div>
                       <div className="d-flex justify-content-center align-items-center gap-3">
                         <span className="material-symbols-outlined p-2 fw-bold" onClick={() => saveFile(detail)}>

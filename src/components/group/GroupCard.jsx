@@ -220,7 +220,7 @@ export default function GroupCard({ props }) {
         </div>
 
         <div className="py-2">
-          <button className="btn btn-sm btn-success group-card-btn w-100" onClick={() => setOpen(true)}>
+          <button className="btn btn-sm btn-success group-card-btn w-100 py-2" onClick={() => setOpen(true)}>
             ACTION
           </button>
         </div>
@@ -231,7 +231,7 @@ export default function GroupCard({ props }) {
           <Sheet.Header />
           <Sheet.Content className="px-3 disable-select">
             <GroupSheetHeader props={props} />
-            <div className="row g-3">
+            <div className="row g-2">
               <div className="col-12 col-md-6 col-lg-3 px-1 py-0 px-lg-2 py-lg-1">
                 <SheetList
                   icon="open_in_new"
@@ -256,13 +256,13 @@ export default function GroupCard({ props }) {
                 <SheetList icon="code" title="view exists data" onClick={() => viewData()} />
               </div>
               <div className="col-12 col-md-6 col-lg-3 px-1 py-0 px-lg-2 py-lg-1">
-                <SheetList icon="account_circle" title="CHECK WITH TELEGRAM" onClick={() => checkGroup(props.username)} />
-              </div>
-              <div className="col-12 col-md-6 col-lg-3 px-1 py-0 px-lg-2 py-lg-1">
                 <SheetList icon="bookmark" title={marker ? "UNMARK" : "MARK"} onClick={() => editData(props.username, "mark", !marker)} />
               </div>
               <div className="col-12 col-md-6 col-lg-3 px-1 py-0 px-lg-2 py-lg-1">
-                <SheetList icon="delete" title="REMOVE" onClick={() => editData(props.username, "delete", false)} />
+                <SheetList icon="account_circle" title="CHECK WITH TELEGRAM"  color="text-info" fill={true} onClick={() => checkGroup(props.username)} />
+              </div>
+              <div className="col-12 col-md-6 col-lg-3 px-1 py-0 px-lg-2 py-lg-1">
+                <SheetList icon="delete" title="REMOVE" color="text-danger" onClick={() => editData(props.username, "delete", false)} />
               </div>
             </div>
           </Sheet.Content>
@@ -272,11 +272,11 @@ export default function GroupCard({ props }) {
 
       <Sheet isOpen={show} onClose={() => setShow(false)} disableDrag={true} detent="content-height" className="custom-sheet">
         <Sheet.Container className="bg-dark disable-select">
-          <Sheet.Header className="px-3 py-2">
+          <Sheet.Header className="px-3 py-3">
             <div className="d-flex">
               <div className="col d-flex flex-column justify-content-center align-items-start px-2">
-                <h6 className="m-0">{props.title}</h6>
-                <p className="m-0 ts-7" id="input-session-info">
+                <h5 className="m-0">{props.title}</h5>
+                <p className="m-0 ts-8" id="input-session-info">
                   {props.url}
                 </p>
               </div>
@@ -288,7 +288,7 @@ export default function GroupCard({ props }) {
             </div>
           </Sheet.Header>
           <Sheet.Content className="px-3 disable-select">
-            <div className="row py-3 g-3">
+            <div className="row py-3 g-2">
               {actions.map((x, i) => {
                 const { key, join, action, inviteCode } = x
 
@@ -296,9 +296,11 @@ export default function GroupCard({ props }) {
                   <div className="col-12 col-md-6 col-lg-3 px-1 py-0 px-lg-2 py-lg-1" key={i}>
                     <SheetList
                       fill={action === "error" || action === "banned" || action === "leave"}
-                      color={action === "error" ? "text-warning" : action === "banned" ? "text-danger" : action === "leave" ? "text-info" : "text-light"}
+                      color={action === "error" ? "text-warning" : action === "banned" ? "text-danger" : action === "leave" ? "text-success" : "text-light"}
                       icon="account_circle"
                       title={`ACCOUNT ${key} (${action})`}
+                      border={true}
+                      rightIcon={action === "leave" ? "check" : ""}
                       onClick={() => actionGroup(key, join, action, inviteCode)}
                     />
                   </div>

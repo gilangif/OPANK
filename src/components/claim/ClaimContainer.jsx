@@ -1,6 +1,6 @@
 import { useSearchParams, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Sheet } from "react-modal-sheet"
 import { toast } from "react-toastify"
 
@@ -20,14 +20,13 @@ export default function ClaimContainer() {
   const [isOpen, setOpen] = useState(false)
   const [claimsFilter, setClaimsFilter] = useState({ models: [], nicknames: [], communities: [], types: [], usernames: [] })
 
-  const [page, setPage] = useState(1)
   const [totalData, setTotalData] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
 
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const [search, setSearch] = useState(searchParams.get("search") || "")
-
+  const [search, setSearch] = useState(() => searchParams.get("search") || "")
+  const [page, setPage] = useState(() => parseInt(searchParams.get("page")) || 1)
   const [sort, setSort] = useState(() => searchParams.get("sort") || "desc")
   const [limit, setLimit] = useState(() => searchParams.get("limit") || 50)
   const [model, setModel] = useState(() => searchParams.get("model") || "")
@@ -41,17 +40,23 @@ export default function ClaimContainer() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const getClaims = async () => {
+  const getClaims = async (page, search, sort, limit, model, community, type, date) => {
     try {
-      const params = { page, search, sort, limit, model, community, type, date }
+      const params = {}
+
+      if (page) params.page = page
+      if (search) params.search = search
+      if (sort) params.sort = sort
+      if (limit) params.limit = limit
+      if (model) params.model = model
+      if (community) params.community = community
+      if (type) params.type = type
+      if (date) params.date = date
 
       const { data: claims } = await axios.get(API + "/claims", { headers: { Authorization: `Bearer ${accessToken}` }, params })
       const { currentPage, totalPages, totalRow, limit: claimLimit, sort: claimSort, data } = claims
 
       dispatch(dispatchClaim(data))
-
-      setTotalData(totalRow)
-      setTotalPages(totalPages)
 
       const obj = { page: currentPage }
 
@@ -64,6 +69,18 @@ export default function ClaimContainer() {
       if (date) obj.date = date
 
       setSearchParams(obj)
+
+      setPage(currentPage)
+      setSearch(search)
+      setSort(sort)
+      setLimit(limit)
+      setModel(model)
+      setCommunity(community)
+      setType(type)
+      setDate(date)
+
+      setTotalData(totalRow)
+      setTotalPages(totalPages)
     } catch (error) {
       const status = error.status && typeof error.status === "number" ? error.status : error.response && error.response.status ? error.response.status : 500
       const message = error.response && error.response.data.message ? error.response.data.message : "Internal Server Error"
@@ -119,14 +136,13 @@ export default function ClaimContainer() {
   const searchData = async (e) => {
     e.preventDefault()
     setPage(1)
-    getClaims()
+    if (page === 1) getClaims(page, search, sort, limit, model, community, type, date)
   }
 
   const filter = (clear) => {
     setOpen(false)
 
     if (clear) {
-      setPage(1)
       setLimit(50)
       setSort("desc")
       setModel("")
@@ -135,12 +151,16 @@ export default function ClaimContainer() {
       setDate("")
       setSearch("")
 
+      if (page !== 1) setPage(1)
+
       setSearchParams({})
+
+      if (page === 1) getClaims(page, search, sort, limit, model, community, type, date)
       return
     }
 
-    setPage(1)
-    getClaims()
+    if (page !== 1) setPage(1)
+    if (page === 1) getClaims(page, search, sort, limit, model, community, type, date)
   }
 
   const PaginationContainer = () => {
@@ -188,11 +208,11 @@ export default function ClaimContainer() {
 
     if (searchParams.get("page")) setPage(parseInt(searchParams.get("page")) || 1)
     if (searchParams.get("limit")) setLimit(parseInt(searchParams.get("limit")) || 10)
-  }, [searchParams])
+  }, [])
 
   useEffect(() => {
-    getClaims()
-  }, [page, searchParams])
+    getClaims(page, search, sort, limit, model, community, type, date)
+  }, [page])
 
   useEffect(() => {
     getFilters()
@@ -220,7 +240,7 @@ export default function ClaimContainer() {
         <PaginationContainer />
 
         <div className="table-responsive w-100 hide-scroll">
-          <table className="table table-md align-middle">
+          <table className="table table-striped table-md align-middle">
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -267,10 +287,13 @@ export default function ClaimContainer() {
 
       <Sheet isOpen={isOpen} onClose={() => setOpen(false)} detent="content-height" className="custom-sheet">
         <Sheet.Container className="bg-dark">
-          <Sheet.Header className="px-3 py-2">
+          <Sheet.Header className="px-3 py-3">
             <div className="d-flex text-light">
               <div className="col d-flex flex-column justify-content-center align-items-start px-2">
-                <h6 className="m-0">CLAIMS FILTER</h6>
+                <h5 className="m-0">CLAIM FILTER</h5>
+                <p className="m-0 ts-8" id="input-session-info">
+                  click filter icon to apply filter
+                </p>
               </div>
               <div className="d-flex justify-content-center align-items-center gap-3">
                 <span className="material-symbols-outlined p-2 fw-bold" onClick={() => filter(true)}>

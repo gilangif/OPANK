@@ -37,7 +37,7 @@ export default function SheetDetailHeader({ thumb, title, community, start, sess
         <div className="col d-flex flex-column justify-content-around disable-select">
           <div>
             <h5 className="col fw-bold m-0 word-break">{title}</h5>
-            <p className="ts-8 my-1">
+            <p className="ts-9 my-1">
               {community} community ({duration})
             </p>
           </div>

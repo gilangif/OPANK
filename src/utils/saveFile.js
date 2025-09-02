@@ -1,5 +1,5 @@
-const saveFile = async (data) => {
-  const filename = `${Date.now()}.json`
+const saveFile = async (data, ext) => {
+  const filename = `${Date.now()}.${ext ? ext : "json"}`
   const content = typeof data === "object" ? JSON.stringify(data, null, 2) : data
   const blob = new Blob([content], { type: "text/plain" })
   const url = URL.createObjectURL(blob)
