@@ -27,6 +27,10 @@ export default function GroupCard({ props }) {
 
   const accounts = []
 
+  useEffect(() => {
+    setMarker(props.mark)
+  }, [props.mark])
+
   if (props.one) accounts.push("one")
   if (props.two) accounts.push("two")
   if (props.three) accounts.push("three")
@@ -164,7 +168,7 @@ export default function GroupCard({ props }) {
     <>
       <div className="card group-card mb-3" id={props.username}>
         {marker ? (
-          <div className="group-thumb-container-cover" style={{ zIndex: 99 }} onDoubleClick={() => editData(props.username, "mark", !marker)}>
+          <div className="group-thumb-container-cover" onDoubleClick={() => editData(props.username, "mark", !marker)}>
             <span className="text-warning fw-bold ts-9">MARKED</span>
           </div>
         ) : (
@@ -259,7 +263,7 @@ export default function GroupCard({ props }) {
                 <SheetList icon="bookmark" title={marker ? "UNMARK" : "MARK"} onClick={() => editData(props.username, "mark", !marker)} />
               </div>
               <div className="col-12 col-md-6 col-lg-3 px-1 py-0 px-lg-2 py-lg-1">
-                <SheetList icon="account_circle" title="CHECK WITH TELEGRAM"  color="text-info" fill={true} onClick={() => checkGroup(props.username)} />
+                <SheetList icon="account_circle" title="CHECK WITH TELEGRAM" color="text-info" fill={true} onClick={() => checkGroup(props.username)} />
               </div>
               <div className="col-12 col-md-6 col-lg-3 px-1 py-0 px-lg-2 py-lg-1">
                 <SheetList icon="delete" title="REMOVE" color="text-danger" onClick={() => editData(props.username, "delete", false)} />
