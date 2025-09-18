@@ -81,7 +81,7 @@ export default function Monitor() {
     if (!confirm.isConfirmed) return
 
     try {
-      const { data } = await axios.post(API + "/pm2", { id: temp.id, action }, { headers: { Authorization: `Bearer ${accessToken}` } })
+      const { data } = await axios.post(API + "/pm2/control", { id: temp.id, action }, { headers: { Authorization: `Bearer ${accessToken}` } })
       const { message } = data
 
       await getMonitor()
@@ -97,7 +97,7 @@ export default function Monitor() {
 
   const getMonitor = async () => {
     try {
-      const { data } = await axios(API + "/monitor", { headers: { Authorization: `Bearer ${accessToken}` } })
+      const { data } = await axios(API + "/pm2/monitor", { headers: { Authorization: `Bearer ${accessToken}` } })
       const { platform, memory, cpus, swap, lists } = data
 
       setPlatform(platform)
